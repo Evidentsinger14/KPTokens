@@ -17,7 +17,7 @@ public class SQLGetter {
     public void createTable(){
         PreparedStatement ps;
         try {
-            ps = tokensMain().SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXIST kptokens (UUID VARCHAR(100),TOKENS VARCHAR(100), PRIMARY KEY (UUID))");
+            ps = tokensMain().SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kptokens (UUID VARCHAR(100),TOKENS VARCHAR(100), PRIMARY KEY (UUID))");
             ps.executeUpdate();
         } catch (SQLException e) {
             tokensMain().getLogger().severe(e.getMessage());
