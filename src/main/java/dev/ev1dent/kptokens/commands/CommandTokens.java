@@ -1,6 +1,6 @@
 package dev.ev1dent.kptokens.commands;
 
-import dev.ev1dent.kptokens.utilities.TokenUtil;
+import dev.ev1dent.kptokens.sql.SQLGetter;
 import dev.ev1dent.kptokens.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class CommandTokens implements CommandExecutor {
 
-    TokenUtil tokenUtil = new TokenUtil();
+    SQLGetter data = new SQLGetter();
     Utils Utils = new Utils();
 
     @Override
@@ -20,7 +20,9 @@ public class CommandTokens implements CommandExecutor {
             if(sender == null){
                 sender.sendMessage("You must be a player to use this command!");
             }
-            sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokenUtil.getTokens()));
+            Player player = (Player) sender;
+            int tokens = data.getTokens(player.getUniqueId());
+            sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
             return true;
         }
         if(!sender.hasPermission("kptokens.tokens." + args[0])){
@@ -43,7 +45,7 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.give")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
-                tokenUtil.addTokens(player, tokens, sender);
+                data.addTokens(player.getUniqueId(), tokens);
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }
@@ -51,7 +53,7 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.remove")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
-                tokenUtil.removeTokens(player, tokens, sender);
+                data.removeTokens(player.getUniqueId(), tokens);
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }

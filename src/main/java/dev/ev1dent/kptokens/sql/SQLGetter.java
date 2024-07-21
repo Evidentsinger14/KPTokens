@@ -51,10 +51,10 @@ public class SQLGetter {
         return false;
     }
 
-    public void addPoints(UUID uuid, int tokens){
+    public void addTokens(UUID uuid, int tokens){
         try {
            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
-           ps.setInt(1, getPoints(uuid) + tokens);
+           ps.setInt(1, getTokens(uuid) + tokens);
            ps.setString(2, uuid.toString());
            ps.executeUpdate();
         } catch (SQLException e){
@@ -62,15 +62,26 @@ public class SQLGetter {
         }
     }
 
-    public int getPoints(UUID uuid){
+    public void removeTokens(UUID uuid, int tokens){
+        try {
+            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
+            ps.setInt(1, getTokens(uuid) - tokens);
+            ps.setString(2, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            tokensMain().getLogger().severe(e.getMessage());
+        }
+    }
+
+    public int getTokens(UUID uuid){
         try{
             PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("SELECT TOKENS FROM kptokens WHERE UUID=?");
             ps.setString(1, uuid.toString());
             ResultSet rs = ps.executeQuery();
-            int points = 0;
+            int tokens = 0;
             if(rs.next()){
-                points = rs.getInt(1);
-                return points;
+                tokens = rs.getInt(1);
+                return tokens;
             }
         } catch (SQLException e){
             tokensMain().plugin.getLogger().severe(e.getMessage());
