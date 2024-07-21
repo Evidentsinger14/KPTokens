@@ -12,6 +12,7 @@ public final class TokensMain extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         registerCommands();
+        this.saveDefaultConfig();
 
     }
 

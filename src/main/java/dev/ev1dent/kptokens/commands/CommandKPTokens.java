@@ -22,7 +22,9 @@ public class CommandKPTokens implements CommandExecutor {
 
         switch (args[0]){
             case null:
-
+                kpPlayer.sendKPMessage("Usage");
+                kpPlayer.sendKPMessage("/kptokens version - displays version information");
+                kpPlayer.sendKPMessage("/kptokens reload - reloads configuration");
                 break;
 
             case "version":
@@ -30,6 +32,11 @@ public class CommandKPTokens implements CommandExecutor {
                 kpPlayer.sendKPMessage("<strikethrough>                                       ");
                 kpPlayer.sendKPMessage("<green>This server is running <light_green><underlined>KPTokens <yellow>v" + tokensMain.plugin.getDescription().getVersion());
                 kpPlayer.sendKPMessage("<green>- <light_green>Bukkit Version: " + Bukkit.getVersion());
+                break;
+
+            case "reload":
+                tokensMain.reloadConfig();
+                kpPlayer.sendKPMessage("Reloaded configuration");
                 break;
 
             default:
