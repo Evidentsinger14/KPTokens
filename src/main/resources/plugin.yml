@@ -1,0 +1,15 @@
+name: KP-Tokens
+version: '${version}'
+main: dev.ev1dent.kptokens.TokensMain
+api-version: '1.21'
+prefix: KPTokens
+authors: [Ev1dent]
+commands:
+  tokens:
+    description: "basic command"
+    permission: "kptokens.tokens"
+
+permissions:
+  kptokens.tokens:
+    default: true
+
