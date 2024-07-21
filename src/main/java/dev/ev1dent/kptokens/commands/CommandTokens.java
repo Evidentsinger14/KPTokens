@@ -45,7 +45,11 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.give")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
+                sender.sendMessage(Utils.kpMessage("Gave " + tokens + " tokens to " + player.getName()));
+                int newAmount = data.getTokens(player.getUniqueId()) + tokens;
+                sender.sendMessage(Utils.kpMessage("New Amount: " + newAmount));
                 data.addTokens(player.getUniqueId(), tokens);
+
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }

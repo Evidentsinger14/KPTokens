@@ -28,9 +28,10 @@ public class SQLGetter {
         try {
             UUID uuid = player.getUniqueId();
             if(!exists(uuid)){
-                PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("INSERT IGNORE INTO kptokens (NAME, TOKENS) VALUES (?,?)");
-                statement.setString(1, player.getName());
-                statement.setString(2, uuid.toString());
+                PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("INSERT IGNORE INTO kptokens (UUID, TOKENS) VALUES (?,?)");
+                statement.setString(1, uuid.toString());
+                statement.setString(2, "0");
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             tokensMain().getLogger().severe(e.getMessage());
