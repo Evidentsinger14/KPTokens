@@ -6,9 +6,11 @@ prefix: KPTokens
 authors: [Ev1dent]
 commands:
   tokens:
+    usage: '/<command>'
     description: "player command"
     permission: "kptokens.tokens"
   kptokens:
+    usage: "/<command> [give | remove]"
     description: "admin command"
     permission: "kptokens.kptokens"
 
