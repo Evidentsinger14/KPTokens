@@ -4,6 +4,8 @@ main: dev.ev1dent.kptokens.TokensMain
 api-version: '1.21'
 prefix: KPTokens
 authors: [Ev1dent]
+depend:
+  - PlaceholderAPI
 commands:
   tokens:
     usage: '/<command>'

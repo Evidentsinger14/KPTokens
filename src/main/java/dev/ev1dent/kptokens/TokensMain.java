@@ -2,9 +2,11 @@ package dev.ev1dent.kptokens;
 
 import dev.ev1dent.kptokens.commands.CommandKPTokens;
 import dev.ev1dent.kptokens.commands.CommandTokens;
+import dev.ev1dent.kptokens.papi.KPTokensExpansion;
 import dev.ev1dent.kptokens.sql.MySQL;
 import dev.ev1dent.kptokens.sql.PlayerHandler;
 import dev.ev1dent.kptokens.sql.SQLGetter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -23,8 +25,7 @@ public final class TokensMain extends JavaPlugin {
         connectDatabase();
         registerCommands();
         registerEvents();
-
-
+        initializeDependencies();
     }
 
     public void registerCommands(){
@@ -34,6 +35,12 @@ public final class TokensMain extends JavaPlugin {
 
     public void registerEvents(){
         this.getServer().getPluginManager().registerEvents(new PlayerHandler(), this);
+    }
+
+    public void initializeDependencies(){
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new KPTokensExpansion().register();
+        }
     }
 
     public void connectDatabase(){
@@ -48,6 +55,5 @@ public final class TokensMain extends JavaPlugin {
             getLogger().info("Connected to database!");
             data.createTable();
         }
-
     }
 }
