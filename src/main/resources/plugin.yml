@@ -6,10 +6,15 @@ prefix: KPTokens
 authors: [Ev1dent]
 commands:
   tokens:
-    description: "basic command"
+    description: "player command"
     permission: "kptokens.tokens"
+  kptokens:
+    description: "admin command"
+    permission: "kptokens.kptokens"
 
 permissions:
   kptokens.tokens:
     default: true
+  kptokens.kptokens:
+    default: op
 

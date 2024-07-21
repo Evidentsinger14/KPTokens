@@ -1,5 +1,6 @@
 package dev.ev1dent.kptokens;
 
+import dev.ev1dent.kptokens.commands.CommandKPTokens;
 import dev.ev1dent.kptokens.commands.CommandTokens;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,7 +19,10 @@ public final class TokensMain extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
+
     public void registerCommands(){
         this.getCommand("tokens").setExecutor(new CommandTokens());
+        this.getCommand("kptokens").setExecutor(new CommandKPTokens());
     }
 }
