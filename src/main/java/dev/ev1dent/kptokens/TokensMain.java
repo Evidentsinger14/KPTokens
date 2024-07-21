@@ -22,6 +22,7 @@ public final class TokensMain extends JavaPlugin {
         this.data = new SQLGetter();
         connectDatabase();
         registerCommands();
+        registerEvents();
 
 
     }
