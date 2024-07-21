@@ -28,7 +28,7 @@ public class CommandTokens implements CommandExecutor {
         }
         processTokens(sender, args);
 
-        return false;
+        return true;
     }
 
     private void processTokens(CommandSender sender, String[] args){
@@ -43,7 +43,7 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.give")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
-                tokenUtil.addTokens(player, tokens);
+                tokenUtil.addTokens(player, tokens, sender);
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }
@@ -51,7 +51,7 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.remove")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
-                tokenUtil.removeTokens(player, tokens);
+                tokenUtil.removeTokens(player, tokens, sender);
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }
