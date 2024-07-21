@@ -52,5 +52,8 @@ public class MySQL {
             }
         }
     }
+    public Connection getConnection(){
+        return connection;
+    }
 }
 
