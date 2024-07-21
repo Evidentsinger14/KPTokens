@@ -14,6 +14,8 @@ public class SQLGetter {
         return TokensMain.getPlugin(TokensMain.class);
     }
 
+    int newJoinTokenAmt = tokensMain().getConfig().getInt("initial-token-amount");
+
     public void createTable(){
         PreparedStatement ps;
         try {
@@ -30,7 +32,7 @@ public class SQLGetter {
             if(!exists(uuid)){
                 PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("INSERT IGNORE INTO kptokens (UUID, TOKENS) VALUES (?,?)");
                 statement.setString(1, uuid.toString());
-                statement.setString(2, "0");
+                statement.setString(2, String.valueOf(newJoinTokenAmt));
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
