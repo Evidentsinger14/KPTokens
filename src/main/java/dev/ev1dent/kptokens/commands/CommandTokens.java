@@ -22,8 +22,10 @@ public class CommandTokens implements CommandExecutor {
             sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
             return true;
         }
-        if(!sender.hasPermission("kptokens.tokens." + args[0])){
-            sender.sendMessage(Utils.kpError("You do not have permission to use that subcommand."));
+
+        if(args.length == 1){
+            sender.sendMessage(Utils.kpError("Please specify a player name, and Token Amount."));
+            return true;
         }
         processTokens(sender, args);
 
@@ -33,11 +35,6 @@ public class CommandTokens implements CommandExecutor {
     private void processTokens(CommandSender sender, String[] args){
         String type = args[0].toLowerCase();
         Player player = Bukkit.getPlayer(args[1]);
-
-        if(args.length == 1){
-            sender.sendMessage(Utils.kpError("Please specify a player name, and Token Amount."));
-            return;
-        }
 
         if(player == null){
             sender.sendMessage(Utils.kpError("Player not found."));
@@ -79,6 +76,7 @@ public class CommandTokens implements CommandExecutor {
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }
         }
+        sender.sendMessage(Utils.kpError("Unknown Command."));
     }
 
 
