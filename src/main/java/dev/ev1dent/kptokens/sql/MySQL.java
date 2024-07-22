@@ -34,8 +34,6 @@ public class MySQL {
         if(host == null || host.isEmpty()){
             tokensMain().getLogger().severe("Looks like this is your first time setting up. You need to configure your database.");
             tokensMain().getLogger().severe("Navigate to /plugins/KPTokens/config.yml and configure your credentials.");
-            tokensMain().getLogger().severe("Shutting down...");
-            Bukkit.getServer().shutdown();
         }
         if(!isConnected()){
             connection = DriverManager.getConnection(connectionString, username, password);
