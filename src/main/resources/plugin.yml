@@ -8,11 +8,11 @@ depend:
   - PlaceholderAPI
 commands:
   tokens:
-    usage: '/<command>'
+    usage: '/<command> [give|remove] <player> <amount>'
     description: "player command"
     permission: "kptokens.tokens"
   kptokens:
-    usage: "/<command> [give | remove]"
+    usage: "/<command>"
     description: "admin command"
     permission: "kptokens.kptokens"
 

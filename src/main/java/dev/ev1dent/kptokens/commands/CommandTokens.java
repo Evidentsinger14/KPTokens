@@ -34,6 +34,11 @@ public class CommandTokens implements CommandExecutor {
         String type = args[0].toLowerCase();
         Player player = Bukkit.getPlayer(args[1]);
 
+        if(args.length == 1){
+            sender.sendMessage(Utils.kpError("Please specify a player name, and Token Amount."));
+            return;
+        }
+
         if(player == null){
             sender.sendMessage(Utils.kpError("Player not found."));
             return;
