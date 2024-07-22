@@ -4,5 +4,7 @@ mysql:
   database: ""
   username: ""
   password: ""
+  autoReconnect: true
+  useSSL: false
 
 initial-token-amount: 0

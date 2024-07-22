@@ -1,7 +1,6 @@
 package dev.ev1dent.kptokens.sql;
 
 import dev.ev1dent.kptokens.TokensMain;
-import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,11 +17,16 @@ public class MySQL {
     private final String database = tokensMain().getConfig().getString("mysql.database");
     private final String username = tokensMain().getConfig().getString("mysql.username");
     private final String password = tokensMain().getConfig().getString("mysql.password");
+    private final boolean autoReconnect = tokensMain().getConfig().getBoolean("mysql.autoReconnect");
+    private final boolean useSSL = tokensMain().getConfig().getBoolean("mysql.useSSL");
 
-    private final String connectionString = String.format(
-            "jdbc:mysql://%s:%s/%s?useSSL=FALSE",
-            host, port, database
-    );
+    String connectionString = new StringBuilder()
+            .setHost(host)
+            .setPort(port)
+            .setDatabase(database)
+            .setAutoReconnect(autoReconnect)
+            .setUseSSL(useSSL)
+            .build();
 
     private Connection connection;
 
