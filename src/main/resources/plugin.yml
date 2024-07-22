@@ -1,4 +1,4 @@
-name: KP-Tokens
+name: KPTokens
 version: '${version}'
 main: dev.ev1dent.kptokens.TokensMain
 api-version: '1.21'

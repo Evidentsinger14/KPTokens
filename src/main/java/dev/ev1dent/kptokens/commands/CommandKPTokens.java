@@ -21,31 +21,10 @@ public class CommandKPTokens implements CommandExecutor {
             sender.sendMessage(Utils.kpError("You don't have permission to use this command!"));
             return true;
         }
+        sender.sendMessage(Utils.kpMessage("<dark_green>This server is running..."));
+        sender.sendMessage(Utils.kpMessage("<dark_green>- <green>KPTokens <dark_green>v" + tokensMain().plugin.getDescription().getVersion()));
+        sender.sendMessage(Utils.kpMessage("<dark_green>- <green>Bukkit Version: " + Bukkit.getVersion()));
 
-        if (args.length == 0) {
-            return false;
-        }
-
-        switch (args[0]){
-            case "version":
-                sender.sendMessage(Utils.kpMessage("            <green><bold>KPTokens            "));
-                sender.sendMessage(Utils.kpMessage("<strikethrough>                                       "));
-                sender.sendMessage(Utils.kpMessage("<dark_green>This server is running <green><underlined>KPTokens <yellow>v" + tokensMain().plugin.getDescription().getVersion()));
-                sender.sendMessage(Utils.kpMessage("<dark_green>- <green>Bukkit Version: " + Bukkit.getVersion()));
-                break;
-
-            case "reload":
-                tokensMain().reloadConfig();
-                sender.sendMessage(Utils.kpMessage("Reloaded configuration"));
-                break;
-
-            default:
-                sender.sendMessage(Utils.kpMessage("Invalid command"));
-                sender.sendMessage(Utils.kpMessage("Usage"));
-                sender.sendMessage(Utils.kpMessage("/kptokens version - displays version information"));
-                sender.sendMessage(Utils.kpMessage("/kptokens reload - reloads configuration"));
-                break;
-        }
-        return false;
+        return true;
     }
 }

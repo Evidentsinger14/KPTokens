@@ -17,9 +17,6 @@ public class CommandTokens implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
         if(args.length == 0) {
-            if(sender == null){
-                sender.sendMessage("You must be a player to use this command!");
-            }
             Player player = (Player) sender;
             int tokens = data.getTokens(player.getUniqueId());
             sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
@@ -45,10 +42,15 @@ public class CommandTokens implements CommandExecutor {
             if(!sender.hasPermission("kptokens.tokens.give")) return;
             try{
                 int tokens = Integer.parseInt(args[2]);
-                sender.sendMessage(Utils.kpMessage("Gave " + tokens + " tokens to " + player.getName()));
                 int newAmount = data.getTokens(player.getUniqueId()) + tokens;
-                sender.sendMessage(Utils.kpMessage("New Amount: " + newAmount));
+
+                sender.sendMessage(Utils.kpMessage("Added " + tokens + " tokens to " + player.getName() + "'s Balance."));
+                sender.sendMessage(Utils.kpMessage("New Token Balance: <white>" + newAmount));
                 data.addTokens(player.getUniqueId(), tokens);
+
+                if(!sender.getName().equals(player.getName())){
+                    player.sendMessage(Utils.kpMessage("<white>" + tokens + "</white> tokens have been added to your balance."));
+                }
 
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
@@ -56,8 +58,18 @@ public class CommandTokens implements CommandExecutor {
         } else if(type.equals("remove")){
             if(!sender.hasPermission("kptokens.tokens.remove")) return;
             try{
+
                 int tokens = Integer.parseInt(args[2]);
+                int newAmount = data.getTokens(player.getUniqueId()) - tokens;
+                if(newAmount < 0){
+                    throw new Exception("Token amount cannot be less than zero.");
+                }
+                sender.sendMessage(Utils.kpMessage("Removed " + tokens + " tokens from " + player.getName() + "'s Balance."));
+                sender.sendMessage(Utils.kpMessage("New Token Balance: <white>" + newAmount));
                 data.removeTokens(player.getUniqueId(), tokens);
+                if(!sender.getName().equals(player.getName())){
+                    player.sendMessage(Utils.kpMessage("<white>" + tokens + "</white> tokens have been removed from your balance."));
+                }
             } catch (Exception e){
                 sender.sendMessage(Utils.kpError(e.getMessage()));
             }

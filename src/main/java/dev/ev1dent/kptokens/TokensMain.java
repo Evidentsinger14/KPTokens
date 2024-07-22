@@ -6,6 +6,7 @@ import dev.ev1dent.kptokens.papi.KPTokensExpansion;
 import dev.ev1dent.kptokens.sql.MySQL;
 import dev.ev1dent.kptokens.sql.PlayerHandler;
 import dev.ev1dent.kptokens.sql.SQLGetter;
+import dev.ev1dent.kptokens.utilities.TabCompletion;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,6 +32,7 @@ public final class TokensMain extends JavaPlugin {
     public void registerCommands(){
         this.getCommand("tokens").setExecutor(new CommandTokens());
         this.getCommand("kptokens").setExecutor(new CommandKPTokens());
+        addTabCompletion();
     }
 
     public void registerEvents(){
@@ -41,6 +43,10 @@ public final class TokensMain extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new KPTokensExpansion().register();
         }
+    }
+
+    public void addTabCompletion(){
+      this.getCommand("tokens").setTabCompleter(new TabCompletion());
     }
 
     public void connectDatabase(){
