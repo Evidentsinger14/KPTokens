@@ -29,6 +29,16 @@ public final class TokensMain extends JavaPlugin {
         initializeDependencies();
     }
 
+    @Override
+    public void onDisable() {
+        try {
+            SQL.disconnect();
+        } catch (SQLException e) {
+            getLogger().severe("An error occurred while disconnecting the database.");
+            getLogger().severe(e.getMessage());
+        }
+    }
+
     public void registerCommands(){
         this.getCommand("tokens").setExecutor(new CommandTokens());
         this.getCommand("kptokens").setExecutor(new CommandKPTokens());
