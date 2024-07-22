@@ -11,6 +11,7 @@ public class KPTokensExpansion extends PlaceholderExpansion {
     private TokensMain tokensMain(){
         return TokensMain.getPlugin(TokensMain.class);
     }
+
     SQLGetter data = new SQLGetter();
 
     @Override
@@ -27,11 +28,16 @@ public class KPTokensExpansion extends PlaceholderExpansion {
     public @NotNull String getVersion() {
         return tokensMain().getDescription().getVersion();
     }
+    @Override
+    public boolean persist() {
+        return true;
+    }
 
-    public int onRequest(Player player, String params){
+    @Override
+    public String onPlaceholderRequest(Player player, String params) {
         if(params.equals("amount")){
-            return data.getTokens(player.getUniqueId());
+            return String.valueOf(data.getTokens(player.getUniqueId()));
         }
-        return 0;
+        return null;
     }
 }
