@@ -65,6 +65,17 @@ public class SQLGetter {
         }
     }
 
+    public void setTokens(UUID uuid, int tokens){
+        try {
+            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
+            ps.setInt(1, tokens);
+            ps.setString(2, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            tokensMain().getLogger().severe(e.getMessage());
+        }
+    }
+
     public void removeTokens(UUID uuid, int tokens){
         try {
             PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");

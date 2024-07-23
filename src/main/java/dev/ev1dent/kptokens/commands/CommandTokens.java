@@ -16,68 +16,79 @@ public class CommandTokens implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             Player player = (Player) sender;
             int tokens = data.getTokens(player.getUniqueId());
             sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
             return true;
         }
 
-        if(args.length == 1){
+        if (args.length == 1) {
             sender.sendMessage(Utils.kpError("Please specify a player name, and Token Amount."));
             return true;
         }
-        processTokens(sender, args);
 
-        return true;
-    }
-
-    private void processTokens(CommandSender sender, String[] args){
-        String type = args[0].toLowerCase();
         Player player = Bukkit.getPlayer(args[1]);
-
-        if(player == null){
+        if (player == null) {
             sender.sendMessage(Utils.kpError("Player not found."));
-            return;
+            return true;
         }
-        if(type.equals("give")){
-            if(!sender.hasPermission("kptokens.tokens.give")) return;
-            try{
-                int tokens = Integer.parseInt(args[2]);
-                int newAmount = data.getTokens(player.getUniqueId()) + tokens;
 
-                sender.sendMessage(Utils.kpMessage("Added " + tokens + " tokens to " + player.getName() + "'s Balance."));
-                sender.sendMessage(Utils.kpMessage("New Token Balance: <white>" + newAmount));
-                data.addTokens(player.getUniqueId(), tokens);
+        String type = args[0].toLowerCase();
+        int tokens = Integer.parseInt(args[2]);
 
-                if(!sender.getName().equals(player.getName())){
-                    player.sendMessage(Utils.kpMessage("<white>" + tokens + "</white> tokens have been added to your balance."));
-                }
+        switch (type) {
+            case "give":
+                if (!sender.hasPermission("kptokens.tokens.give")) return true;
+                addTokens(tokens, sender, player);
+                break;
 
-            } catch (Exception e){
-                sender.sendMessage(Utils.kpError(e.getMessage()));
-            }
-        } else if(type.equals("remove")){
-            if(!sender.hasPermission("kptokens.tokens.remove")) return;
-            try{
+            case "remove":
+                if (!sender.hasPermission("kptokens.tokens.remove")) return true;
+                removeTokens(tokens, sender, player);
+                break;
 
-                int tokens = Integer.parseInt(args[2]);
-                int newAmount = data.getTokens(player.getUniqueId()) - tokens;
-                if(newAmount < 0){
-                    throw new Exception("Token amount cannot be less than zero.");
-                }
-                sender.sendMessage(Utils.kpMessage("Removed " + tokens + " tokens from " + player.getName() + "'s Balance."));
-                sender.sendMessage(Utils.kpMessage("New Token Balance: <white>" + newAmount));
-                data.removeTokens(player.getUniqueId(), tokens);
-                if(!sender.getName().equals(player.getName())){
-                    player.sendMessage(Utils.kpMessage("<white>" + tokens + "</white> tokens have been removed from your balance."));
-                }
-            } catch (Exception e){
-                sender.sendMessage(Utils.kpError(e.getMessage()));
-            }
+            case "set":
+                if (!sender.hasPermission("kptokens.tokens.set")) return true;
+                setTokens(tokens, sender, player);
+                break;
+
+            default:
+                sender.sendMessage(Utils.kpError("Unknown Command."));
+                break;
+
         }
-        sender.sendMessage(Utils.kpError("Unknown Command."));
+        return true;
+}
+
+    private void removeTokens(int tokens, CommandSender sender, Player player){
+        int newAmount = data.getTokens(player.getUniqueId()) - tokens;
+        if(newAmount < 0) return;
+
+        try {
+            data.removeTokens(player.getUniqueId(), tokens);
+        } catch (Exception e) {
+            sender.sendMessage(Utils.kpError(e.getMessage()));
+        }
+        sender.sendMessage(Utils.kpMessage("Removed " + tokens + " token(s) from " + player.getName()));
     }
 
+    private void addTokens(int tokens, CommandSender sender, Player player){
+        try{
+            data.addTokens(player.getUniqueId(), tokens);
+        } catch (Exception e){
+            sender.sendMessage(Utils.kpError(e.getMessage()));
+        }
+        sender.sendMessage(Utils.kpMessage("Added " + tokens + " token(s) to " + player.getName()));
+    }
+
+    private void setTokens(int tokens, CommandSender sender, Player player){
+        try{
+            data.setTokens(player.getUniqueId(), tokens);
+        } catch (Exception e){
+            sender.sendMessage(Utils.kpError(e.getMessage()));
+        }
+        sender.sendMessage(Utils.kpMessage("Set " + player.getName() + "'s tokens to " + tokens ));
+    }
 
 }

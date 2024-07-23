@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TabCompletion implements TabCompleter {
-    private final String[] inputArgs = { "give", "remove" };
+    private final String[] inputArgs = { "give", "remove", "set"};
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         final List<String> completions = new ArrayList<>();
