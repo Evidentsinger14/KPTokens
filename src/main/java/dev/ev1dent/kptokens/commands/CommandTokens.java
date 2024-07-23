@@ -35,7 +35,14 @@ public class CommandTokens implements CommandExecutor {
         }
 
         String type = args[0].toLowerCase();
-        int tokens = Integer.parseInt(args[2]);
+
+        int tokens;
+        try{
+            tokens = Integer.parseInt(args[2]);
+        } catch (Exception e){
+            sender.sendMessage(Utils.kpError("Invalid token amount"));
+            return true;
+        }
 
         switch (type) {
             case "give":
@@ -90,5 +97,4 @@ public class CommandTokens implements CommandExecutor {
         }
         sender.sendMessage(Utils.kpMessage("Set " + player.getName() + "'s tokens to " + tokens ));
     }
-
 }
