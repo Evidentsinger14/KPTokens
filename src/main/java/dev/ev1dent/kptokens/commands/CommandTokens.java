@@ -86,7 +86,7 @@ public class CommandTokens implements CommandExecutor {
         sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
 
         if(isSilenced(args)){
-            sender.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+            player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
         }
     }
 
@@ -100,7 +100,7 @@ public class CommandTokens implements CommandExecutor {
         sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
 
         if(isSilenced(args)){
-            sender.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+            player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
         }
     }
 
@@ -114,7 +114,7 @@ public class CommandTokens implements CommandExecutor {
         sender.sendMessage(Utils.kpMessage(String.format(message, player.getName() + "'s")));
 
         if(isSilenced(args)){
-            sender.sendMessage(Utils.kpMessage(String.format(message, "your")));
+            player.sendMessage(Utils.kpMessage(String.format(message, "your")));
         }
     }
 
