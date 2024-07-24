@@ -17,10 +17,9 @@ public class SQLGetter {
     int newJoinTokenAmt = tokensMain().getConfig().getInt("initial-token-amount");
 
     public void createTable(){
-        PreparedStatement ps;
         try {
-            ps = tokensMain().SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kptokens (UUID VARCHAR(100),TOKENS VARCHAR(100), PRIMARY KEY (UUID))");
-            ps.executeUpdate();
+            PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS kptokens (UUID VARCHAR(100),TOKENS VARCHAR(100), PRIMARY KEY (UUID))");
+            statement.executeUpdate();
         } catch (SQLException e) {
             tokensMain().getLogger().severe(e.getMessage());
         }
@@ -42,9 +41,9 @@ public class SQLGetter {
 
     public boolean exists(UUID uuid){
         try {
-            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("SELECT * FROM kptokens WHERE UUID=?");
-            ps.setString(1, uuid.toString());
-            ResultSet rs = ps.executeQuery();
+            PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("SELECT * FROM kptokens WHERE UUID=?");
+            statement.setString(1, uuid.toString());
+            ResultSet rs = statement.executeQuery();
             if(rs.next()){
                 return true;
             }
@@ -56,10 +55,10 @@ public class SQLGetter {
 
     public void addTokens(UUID uuid, int tokens){
         try {
-           PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
-           ps.setInt(1, getTokens(uuid) + tokens);
-           ps.setString(2, uuid.toString());
-           ps.executeUpdate();
+           PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
+           statement.setInt(1, getTokens(uuid) + tokens);
+           statement.setString(2, uuid.toString());
+           statement.executeUpdate();
         } catch (SQLException e){
             tokensMain().getLogger().severe(e.getMessage());
         }
@@ -67,10 +66,10 @@ public class SQLGetter {
 
     public void setTokens(UUID uuid, int tokens){
         try {
-            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
-            ps.setInt(1, tokens);
-            ps.setString(2, uuid.toString());
-            ps.executeUpdate();
+            PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
+            statement.setInt(1, tokens);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
         } catch (SQLException e){
             tokensMain().getLogger().severe(e.getMessage());
         }
@@ -78,10 +77,10 @@ public class SQLGetter {
 
     public void removeTokens(UUID uuid, int tokens){
         try {
-            PreparedStatement ps = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
-            ps.setInt(1, getTokens(uuid) - tokens);
-            ps.setString(2, uuid.toString());
-            ps.executeUpdate();
+            PreparedStatement statement = tokensMain().SQL.getConnection().prepareStatement("UPDATE kptokens SET TOKENS=? WHERE UUID=?");
+            statement.setInt(1, getTokens(uuid) - tokens);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
         } catch (SQLException e){
             tokensMain().getLogger().severe(e.getMessage());
         }
