@@ -17,9 +17,8 @@ public class CommandTokens implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
 
         if (args.length == 0) {
-            if(!(sender instanceof Player)) return false;
+            if(!(sender instanceof Player player)) return false;
 
-            Player player = (Player) sender;
             int tokens = data.getTokens(player.getUniqueId());
             sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
             return true;
@@ -45,9 +44,6 @@ public class CommandTokens implements CommandExecutor {
             sender.sendMessage(Utils.kpError("Invalid token amount"));
             return true;
         }
-
-        boolean silenced = false;
-
 
         switch (type) {
             case "give":
@@ -125,7 +121,7 @@ public class CommandTokens implements CommandExecutor {
             if(silent.equals("-s")){
                 silenced = true;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException ignored) {
 
         }
         return !silenced;
