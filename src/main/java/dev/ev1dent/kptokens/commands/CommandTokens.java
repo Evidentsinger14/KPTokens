@@ -46,20 +46,23 @@ public class CommandTokens implements CommandExecutor {
             return true;
         }
 
+        boolean silenced = false;
+
+
         switch (type) {
             case "give":
                 if (!sender.hasPermission("kptokens.tokens.give")) return true;
-                addTokens(tokens, sender, player);
+                addTokens(tokens, sender, player, args);
                 break;
 
             case "remove":
                 if (!sender.hasPermission("kptokens.tokens.remove")) return true;
-                removeTokens(tokens, sender, player);
+                removeTokens(tokens, sender, player, args);
                 break;
 
             case "set":
                 if (!sender.hasPermission("kptokens.tokens.set")) return true;
-                setTokens(tokens, sender, player);
+                setTokens(tokens, sender, player, args);
                 break;
 
             default:
@@ -70,7 +73,7 @@ public class CommandTokens implements CommandExecutor {
         return true;
 }
 
-    private void removeTokens(int tokens, CommandSender sender, Player player){
+    private void removeTokens(int tokens, CommandSender sender, Player player, String[] args){
         int newAmount = data.getTokens(player.getUniqueId()) - tokens;
         if(newAmount < 0) return;
 
@@ -79,24 +82,53 @@ public class CommandTokens implements CommandExecutor {
         } catch (Exception e) {
             sender.sendMessage(Utils.kpError(e.getMessage()));
         }
-        sender.sendMessage(Utils.kpMessage("Removed " + tokens + " token(s) from " + player.getName()));
+        String message = "Removed " + tokens + " token(s) from %s";
+        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
+
+        if(isSilenced(args)){
+            sender.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+        }
     }
 
-    private void addTokens(int tokens, CommandSender sender, Player player){
+    private void addTokens(int tokens, CommandSender sender, Player player, String[] args){
         try{
             data.addTokens(player.getUniqueId(), tokens);
         } catch (Exception e){
             sender.sendMessage(Utils.kpError(e.getMessage()));
         }
-        sender.sendMessage(Utils.kpMessage("Added " + tokens + " token(s) to " + player.getName()));
+        String message = "Added " + tokens + " token(s) to %s";
+        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
+
+        if(isSilenced(args)){
+            sender.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+        }
     }
 
-    private void setTokens(int tokens, CommandSender sender, Player player){
+    private void setTokens(int tokens, CommandSender sender, Player player, String[] args){
         try{
             data.setTokens(player.getUniqueId(), tokens);
         } catch (Exception e){
             sender.sendMessage(Utils.kpError(e.getMessage()));
         }
-        sender.sendMessage(Utils.kpMessage("Set " + player.getName() + "'s tokens to " + tokens ));
+        String message = "Set %s token balance to " + tokens;
+        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName() + "'s")));
+
+        if(isSilenced(args)){
+            sender.sendMessage(Utils.kpMessage(String.format(message, "your")));
+        }
     }
+
+    private boolean isSilenced(String[] args){
+        boolean silenced = false;
+        try {
+            String silent = args[3].toLowerCase();
+            if(silent.equals("-s")){
+                silenced = true;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        return !silenced;
+    }
+
 }
