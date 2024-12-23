@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -151,6 +153,51 @@ public class SqlStorage {
 
     public BukkitCompletableFuture<Integer> getTokensAsync(UUID uuid) {
         return BukkitCompletableFuture.convert(CompletableFuture.supplyAsync(() -> getTokens(uuid), this.sqlExecutor));
+    }
+
+    public Map<UUID, Integer> getAllPlayerTokens() {
+        Map<UUID, Integer> allTokens = new HashMap<>();
+        try (Connection c = dataSource.getConnection();
+             Statement s = c.createStatement()) {
+            ResultSet rs = s.executeQuery("SELECT UUID, TOKENS FROM kptokens");
+            while (rs.next()) {
+                UUID id = UUID.fromString(rs.getString("UUID"));
+                int tokens = rs.getInt("TOKENS");
+                allTokens.put(id, tokens);
+            }
+        } catch (SQLException e) {
+            tokensMain().getLogger().severe(e.getMessage());
+        }
+
+        return allTokens;
+    }
+
+    public BukkitCompletableFuture<Map<UUID, Integer>> getAllPlayerTokensAsync() {
+        return BukkitCompletableFuture.convert(CompletableFuture.supplyAsync(this::getAllPlayerTokens, this.sqlExecutor));
+    }
+
+    public void setTokens(Map<UUID, Integer> allTokens) {
+        try (Connection c = dataSource.getConnection();
+             PreparedStatement ps = c.prepareStatement("""
+                     INSERT INTO kptokens (UUID, TOKENS) VALUES (?, ?)
+                       ON DUPLICATE KEY UPDATE kptokens TOKENS=?""")) {
+            for (Map.Entry<UUID, Integer> entry : allTokens.entrySet()) {
+                UUID id = entry.getKey();
+                int tokens = entry.getValue();
+                ps.setString(1, id.toString());
+                ps.setInt(2, tokens);
+                ps.setInt(3, tokens);
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+        } catch (SQLException e) {
+            tokensMain().getLogger().severe(e.getMessage());
+        }
+    }
+
+    public BukkitCompletableFuture<Void> setTokensAsync(Map<UUID, Integer> allTokens) {
+        return BukkitCompletableFuture.convert(CompletableFuture.runAsync(() -> setTokens(allTokens), this.sqlExecutor));
     }
 
 }

@@ -8,6 +8,7 @@ import dev.ev1dent.kptokens.papi.KPTokensExpansion;
 import dev.ev1dent.kptokens.sql.PlayerHandler;
 import dev.ev1dent.kptokens.sql.SqlStorage;
 import dev.ev1dent.kptokens.sql.JdbcUrlBuilder;
+import dev.ev1dent.kptokens.sql.StorageImportExport;
 import dev.ev1dent.kptokens.utilities.TabCompletion;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +33,8 @@ public final class TokensMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-      sqlStorage.shutdown();
+        StorageImportExport.shutdown();
+        sqlStorage.shutdown();
     }
 
     public void registerCommands(){
