@@ -1,6 +1,7 @@
 package dev.ev1dent.kptokens.commands;
 
-import dev.ev1dent.kptokens.sql.SQLGetter;
+import dev.ev1dent.kptokens.TokensMain;
+import dev.ev1dent.kptokens.sql.SqlStorage;
 import dev.ev1dent.kptokens.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,9 +9,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 public class CommandTokens implements CommandExecutor {
 
-    SQLGetter data = new SQLGetter();
+    private TokensMain tokensMain() {
+        return TokensMain.getPlugin(TokensMain.class);
+    }
+
+    SqlStorage data = tokensMain().sqlStorage;
     Utils Utils = new Utils();
 
     @Override
@@ -19,8 +27,8 @@ public class CommandTokens implements CommandExecutor {
         if (args.length == 0) {
             if(!(sender instanceof Player player)) return false;
 
-            int tokens = data.getTokens(player.getUniqueId());
-            sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens));
+            data.getTokensAsync(player.getUniqueId())
+                    .thenAcceptOnMain(tokens -> sender.sendMessage(Utils.formatMM("<white>Tokens: <green>" + tokens)));
             return true;
         }
 
@@ -70,47 +78,53 @@ public class CommandTokens implements CommandExecutor {
 }
 
     private void removeTokens(int tokens, CommandSender sender, Player player, String[] args){
-        int newAmount = data.getTokens(player.getUniqueId()) - tokens;
-        if(newAmount < 0) return;
-
+        UUID uuid = player.getUniqueId();
         try {
-            data.removeTokens(player.getUniqueId(), tokens);
+            data.getTokensAsync(uuid).thenCompose(currentTokens -> {
+                int newAmount = currentTokens - tokens;
+                if (newAmount < 0) return new CompletableFuture<>();
+
+                return data.removeTokensAsync(uuid, tokens);
+            }).thenRunOnMain(() -> {
+                String message = "Removed " + tokens + " token(s) from %s";
+                sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
+
+                if (isSilenced(args)) {
+                    player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+                }
+            });
         } catch (Exception e) {
             sender.sendMessage(Utils.kpError(e.getMessage()));
-        }
-        String message = "Removed " + tokens + " token(s) from %s";
-        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
-
-        if(isSilenced(args)){
-            player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
         }
     }
 
     private void addTokens(int tokens, CommandSender sender, Player player, String[] args){
-        try{
-            data.addTokens(player.getUniqueId(), tokens);
-        } catch (Exception e){
-            sender.sendMessage(Utils.kpError(e.getMessage()));
-        }
-        String message = "Added " + tokens + " token(s) to %s";
-        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
+        try {
+            data.addTokensAsync(player.getUniqueId(), tokens).thenRunOnMain(() -> {
+                String message = "Added " + tokens + " token(s) to %s";
+                sender.sendMessage(Utils.kpMessage(String.format(message, player.getName())));
 
-        if(isSilenced(args)){
-            player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+                if (isSilenced(args)) {
+                    player.sendMessage(Utils.kpMessage(String.format(message, "your balance.")));
+                }
+            });
+        } catch (Exception e) {
+            sender.sendMessage(Utils.kpError(e.getMessage()));
         }
     }
 
     private void setTokens(int tokens, CommandSender sender, Player player, String[] args){
-        try{
-            data.setTokens(player.getUniqueId(), tokens);
-        } catch (Exception e){
-            sender.sendMessage(Utils.kpError(e.getMessage()));
-        }
-        String message = "Set %s token balance to " + tokens;
-        sender.sendMessage(Utils.kpMessage(String.format(message, player.getName() + "'s")));
+        try {
+            data.setTokensAsync(player.getUniqueId(), tokens).thenRunOnMain(() -> {
+                String message = "Set %s token balance to " + tokens;
+                sender.sendMessage(Utils.kpMessage(String.format(message, player.getName() + "'s")));
 
-        if(isSilenced(args)){
-            player.sendMessage(Utils.kpMessage(String.format(message, "your")));
+                if (isSilenced(args)) {
+                    player.sendMessage(Utils.kpMessage(String.format(message, "your")));
+                }
+            });
+        } catch (Exception e) {
+            sender.sendMessage(Utils.kpError(e.getMessage()));
         }
     }
 

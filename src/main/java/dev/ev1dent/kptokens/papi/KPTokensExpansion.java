@@ -1,6 +1,6 @@
 package dev.ev1dent.kptokens.papi;
 
-import dev.ev1dent.kptokens.sql.SQLGetter;
+import dev.ev1dent.kptokens.sql.SqlStorage;
 import org.bukkit.entity.Player;
 import dev.ev1dent.kptokens.TokensMain;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -12,7 +12,7 @@ public class KPTokensExpansion extends PlaceholderExpansion {
         return TokensMain.getPlugin(TokensMain.class);
     }
 
-    SQLGetter data = new SQLGetter();
+    SqlStorage data = tokensMain().sqlStorage;
 
     @Override
     public @NotNull String getIdentifier() {

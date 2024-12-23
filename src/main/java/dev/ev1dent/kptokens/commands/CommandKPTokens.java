@@ -22,7 +22,7 @@ public class CommandKPTokens implements CommandExecutor {
             return true;
         }
         sender.sendMessage(Utils.kpMessage("<dark_green>This server is running..."));
-        sender.sendMessage(Utils.kpMessage("<dark_green>- <green>KPTokens <dark_green>v" + tokensMain().plugin.getDescription().getVersion()));
+        sender.sendMessage(Utils.kpMessage("<dark_green>- <green>KPTokens <dark_green>v" + tokensMain().getDescription().getVersion()));
         sender.sendMessage(Utils.kpMessage("<dark_green>- <green>Bukkit Version: " + Bukkit.getVersion()));
 
         return true;

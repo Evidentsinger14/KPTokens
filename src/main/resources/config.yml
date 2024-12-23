@@ -1,10 +1,11 @@
-mysql:
+storage:
+  type: mysql
   host: ""
   port: "3306"
   database: ""
   username: ""
   password: ""
-  autoReconnect: true
   useSSL: false
+  thread-pool-size: 2
 
 initial-token-amount: 0
